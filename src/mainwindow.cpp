@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_settingsPage(nullptr)
 {
     initializeUi();
-}
+}   
 
 MainWindow::~MainWindow() = default;
 

@@ -6,10 +6,11 @@
 #include <QString>
 SettingsPage::SettingsPage(QWidget *parent)
     :QWidget(parent),
-    m_touchCountLabel(nullptr),
      m_titleLabel(nullptr),
-     m_touchButton(nullptr),
+    m_touchCountLabel(nullptr),
      m_backButton(nullptr),
+     m_touchButton(nullptr),
+    
      
      m_touchCount(0)
 {

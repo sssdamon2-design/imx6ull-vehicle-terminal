@@ -16,10 +16,11 @@ SOURCES += \
     src/mainwindow.cpp \
     src/pages/homepage.cpp \
     src/pages/monitorpage.cpp \
-    src/pages/settingspage.cpp
-
+    src/pages/settingspage.cpp \
+    src/services/systeminfoservice.cpp
 HEADERS += \
     src/mainwindow.h \
     src/pages/homepage.h \
     src/pages/monitorpage.h \
-    src/pages/settingspage.h
+    src/pages/settingspage.h \
+    src/services/systeminfoservice.h

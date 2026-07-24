@@ -61,3 +61,4 @@ Thumbs.db
 # Touch diagnostic build outputs
 experiments/touch_diag/touch_diag
 experiments/touch_diag/touch_range_fix
+/experiments/system_info_probe/system_info_probe

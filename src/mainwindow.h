@@ -94,7 +94,7 @@ m_homePage
         void initializeUi();
         QStackedWidget *m_pageStack;
         HomePage *m_homePage;
-        MonitorPage *m_monitorPage;
+        MonitorPage *m_monitorPage;         //这些类定义在各自的cpp文件里
         SettingsPage *m_settingsPage;
 
     private slots:
