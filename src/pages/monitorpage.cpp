@@ -8,7 +8,7 @@
 MonitorPage::MonitorPage(QWidget *parent)
     : QWidget(parent),
       m_titleLabel(nullptr),
-      m_placeholderLabel(nullptr),
+      
       m_cpuUsageLabel(nullptr),
       m_cpuTemperatureLabel(nullptr),
       m_cpuFrequencyLabel(nullptr),
@@ -17,8 +17,13 @@ MonitorPage::MonitorPage(QWidget *parent)
       m_Load_average(nullptr),
       m_Processes(nullptr),
       m_backButton(nullptr),
-      m_refreshTimer(nullptr)
-      //这里其实隐藏了m_systemInfoService()没有写出来，QT是看声明中的顺序给内存
+      m_refreshTimer(nullptr),
+      m_dht11Timer(nullptr),
+      m_temperatureLabel(nullptr),
+      m_humidityLabel(nullptr),
+      m_dht11StatusLabel(nullptr),
+      //这里其实隐藏了m_systemInfoService()没有写出来，QT是看声明中的顺序给内存  一般指针要赋初值，对象可以不用
+      m_dht11Service(nullptr)
 {
     initializeUi();
 
@@ -28,6 +33,10 @@ MonitorPage::MonitorPage(QWidget *parent)
     refreshSystemInfo();
     m_refreshTimer->start(1000);
 
+    m_dht11Timer = new QTimer(this);
+    m_dht11Timer->setInterval(2000);
+    connect(m_dht11Timer,&QTimer::timeout,this,&MonitorPage::refreshDht11Data);
+
 }
 
 MonitorPage::~MonitorPage() = default;
@@ -36,13 +45,16 @@ void MonitorPage::initializeUi()
 {
     setObjectName("monitorPage");
 
+    
+
+
     m_titleLabel = new QLabel("Environment Monitor", this);
     m_titleLabel->setAlignment(Qt::AlignCenter);
     m_titleLabel->setObjectName("titleLabel");
 
-    m_placeholderLabel =new QLabel("Sensor module will be added later", this);
-    m_placeholderLabel->setAlignment(Qt::AlignCenter);
-    m_placeholderLabel->setObjectName("placeholderLabel");
+   // m_placeholderLabel =new QLabel("Sensor module will be added later", this);
+   // m_placeholderLabel->setAlignment(Qt::AlignCenter);
+   // m_placeholderLabel->setObjectName("placeholderLabel");
 
     m_backButton = new QPushButton("Back", this);
     m_backButton->setFocusPolicy(Qt::NoFocus);
@@ -60,9 +72,14 @@ void MonitorPage::initializeUi()
     m_Load_average =new QLabel("Load Average: --", this);
     m_Processes=   new QLabel("Processes: --", this);
 
+    m_temperatureLabel= new QLabel("环境温度: --",this);
+    m_humidityLabel   = new QLabel("环境湿度: --",this);
+    m_dht11StatusLabel    = new QLabel("DHT11 状态: Waiting",this);
+
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(60, 40, 60, 40);
-    mainLayout->setSpacing(30);
+    mainLayout->setContentsMargins(60, 15, 60, 15);
+    mainLayout->setSpacing(8);
 
     mainLayout->addWidget(m_titleLabel);
     mainLayout->addWidget(m_cpuUsageLabel);
@@ -72,8 +89,12 @@ void MonitorPage::initializeUi()
     mainLayout->addWidget(m_uptimeLabel);
     mainLayout->addWidget(m_Load_average);
     mainLayout->addWidget(m_Processes);
+    
+    //mainLayout->addWidget(m_placeholderLabel);
+    mainLayout->addWidget(m_temperatureLabel);
+    mainLayout->addWidget(m_humidityLabel);
+    mainLayout->addWidget(m_dht11StatusLabel);
     mainLayout->addStretch();
-    mainLayout->addWidget(m_placeholderLabel);
     mainLayout->addWidget(m_backButton);
 
     connect(m_backButton,
@@ -228,4 +249,47 @@ else
 
 
 
+}
+
+
+
+void MonitorPage::refreshDht11Data()
+{
+    int humidity=0;
+    int temperature=0;
+    QString errorMessage;
+    bool success;
+    success =m_dht11Service->readOnce(&humidity,&temperature,errorMessage);
+    if(success)
+    {
+        m_humidityLabel->setText(QString("环境湿度: %1%").arg(humidity));
+        m_temperatureLabel->setText(QString("环境温度: %1℃").arg(temperature));
+        m_dht11StatusLabel->setText("DHT11 状态: Normal");
+        return;
+    }
+    
+        m_dht11StatusLabel->setText(QString("DHT11 Status: %1").arg(errorMessage));
+    
+
+}
+
+
+void MonitorPage::startDht11Monitoring()
+{
+    if(m_dht11Timer->isActive())
+    {
+        return;
+    }
+    
+    refreshDht11Data();
+
+    m_dht11Timer->start();
+}
+
+void MonitorPage::stopDht11Monitoring()
+{
+    if(m_dht11Timer->isActive())
+    {
+       m_dht11Timer->start();
+    }
 }

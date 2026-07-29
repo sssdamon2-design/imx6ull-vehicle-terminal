@@ -65,14 +65,17 @@ void MainWindow::initializeUi()
 void MainWindow::showHomePage()
 {
     m_pageStack->setCurrentWidget(m_homePage);
+    m_monitorPage->stopDht11Monitoring();
 }
 
 void MainWindow::showMonitorPage()
 {
     m_pageStack->setCurrentWidget(m_monitorPage);
+    m_monitorPage->startDht11Monitoring();
 }
 
 void MainWindow::showSettingsPage()
 {
     m_pageStack->setCurrentWidget(m_settingsPage);
+
 }

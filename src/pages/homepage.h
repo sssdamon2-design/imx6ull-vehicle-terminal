@@ -55,6 +55,7 @@ text：参数名称
     QPushButton *m_networkButton;
     QPushButton *m_cameraButton;
     QPushButton *m_aiButton;  //声明6个按钮指针
+    
 };
 
 #endif

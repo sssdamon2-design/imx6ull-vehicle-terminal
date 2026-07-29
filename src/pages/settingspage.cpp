@@ -7,7 +7,7 @@
 SettingsPage::SettingsPage(QWidget *parent)
     :QWidget(parent),
      m_titleLabel(nullptr),
-    m_touchCountLabel(nullptr),
+     m_touchCountLabel(nullptr),
      m_backButton(nullptr),
      m_touchButton(nullptr),
     
